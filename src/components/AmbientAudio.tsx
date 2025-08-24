@@ -1,71 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-const NATURE_SOUND_URL = '/sounds/nature.mp3';
-const PIANO_SOUND_URL = '/sounds/piano.mp3';
 
 const YOUTUBE_EMBED_URL = 'https://www.youtube.com/embed/FMrtSHAAPhM?si=8M0nfqPPy1J5SRIP';
 
 export default function AmbientAudio() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.3);
-
-  const natureAudioRef = useRef<HTMLAudioElement | null>(null);
-  const pianoAudioRef = useRef<HTMLAudioElement | null>(null);
-
-  // Start both audio tracks and loop them
-  const startAmbientSounds = async () => {
-    try {
-      if (!natureAudioRef.current) {
-        natureAudioRef.current = new Audio(NATURE_SOUND_URL);
-        natureAudioRef.current.loop = true;
-        natureAudioRef.current.volume = volume * 0.7;
-      }
-      if (!pianoAudioRef.current) {
-        pianoAudioRef.current = new Audio(PIANO_SOUND_URL);
-        pianoAudioRef.current.loop = true;
-        pianoAudioRef.current.volume = volume * 0.5;
-      }
-      await natureAudioRef.current.play();
-      await pianoAudioRef.current.play();
-      setIsPlaying(true);
-    } catch (err) {
-      console.error('Could not play ambient sounds:', err);
-      alert('Local audio autoplay blocked. Use the YouTube player below!');
-      setIsPlaying(true); // Still show as playing, just YouTube instead
-    }
-  };
-
-  const stopAmbientSounds = () => {
-    natureAudioRef.current?.pause();
-    if (natureAudioRef.current) natureAudioRef.current.currentTime = 0;
-    pianoAudioRef.current?.pause();
-    if (pianoAudioRef.current) pianoAudioRef.current.currentTime = 0;
-    setIsPlaying(false);
-  };
 
   const togglePlay = () => {
-    if (isPlaying) {
-      stopAmbientSounds();
-    } else {
-      startAmbientSounds();
-    }
+    setIsPlaying(prev => !prev);
   };
-
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(e.target.value);
-    setVolume(newVolume);
-    if (natureAudioRef.current) natureAudioRef.current.volume = newVolume * 0.7;
-    if (pianoAudioRef.current) pianoAudioRef.current.volume = newVolume * 0.5;
-  };
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      stopAmbientSounds();
-    };
-  }, []);
 
   return (
     <div className="fixed top-6 right-6 z-50 glass-panel rounded-2xl p-4 float-gentle">
@@ -80,35 +24,18 @@ export default function AmbientAudio() {
               ? "bg-golden-warm/20 text-golden-warm border-golden-warm/30 hover:bg-golden-warm/30" 
               : "bg-forest-medium/20 text-forest-mist border-forest-medium/30 hover:bg-forest-medium/30"
           )}
-          title={isPlaying ? "Pause ambient sounds" : "Play ambient sounds"}
+          title={isPlaying ? "Pause YouTube ambiance" : "Play YouTube ambiance"}
         >
           {isPlaying ? <Volume2 size={20} /> : <VolumeX size={20} />}
         </button>
-
-        {/* Volume Slider */}
-        <div className="flex items-center space-x-2">
-          <span className="text-xs text-forest-mist whitespace-nowrap">Volume</span>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.1"
-            value={volume}
-            onChange={handleVolumeChange}
-            className="w-20 h-2 rounded-lg cursor-pointer"
-          />
-        </div>
       </div>
 
       {/* Status Text */}
       <div className="text-xs text-forest-mist mt-2 text-center">
-        {isPlaying ? 'Nature and piano ambiance playing' : 'Ambient sounds paused'}
-      </div>
-      <div className="text-xs text-red-500 mt-2 text-center">
-        { !isPlaying && 'If local sounds do not play, check your browser and file locations. Or use the YouTube player below.' }
+        {isPlaying ? 'YouTube ambiance playing' : 'Ambiance paused'}
       </div>
 
-      {/* YouTube fallback */}
+      {/* YouTube player */}
       {isPlaying && (
         <div className="mt-4 flex flex-col items-center">
           <iframe
