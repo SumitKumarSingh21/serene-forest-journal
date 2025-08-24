@@ -24,6 +24,30 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				
+				// Nature palette
+				'forest-deep': 'hsl(var(--forest-deep))',
+				'forest-medium': 'hsl(var(--forest-medium))',
+				'forest-light': 'hsl(var(--forest-light))',
+				'forest-mist': 'hsl(var(--forest-mist))',
+				
+				'golden-warm': 'hsl(var(--golden-warm))',
+				'golden-glow': 'hsl(var(--golden-glow))',
+				'golden-soft': 'hsl(var(--golden-soft))',
+				
+				'water-deep': 'hsl(var(--water-deep))',
+				'water-flow': 'hsl(var(--water-flow))',
+				'water-splash': 'hsl(var(--water-splash))',
+				
+				'firefly-glow': 'hsl(var(--firefly-glow))',
+				'nature-accent': 'hsl(var(--nature-accent))',
+				'earth-warm': 'hsl(var(--earth-warm))',
+				
+				// Glass system
+				'glass-bg': 'hsl(var(--glass-bg))',
+				'glass-border': 'hsl(var(--glass-border))',
+				'glass-shadow': 'hsl(var(--glass-shadow))',
+				
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
@@ -68,6 +92,15 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			animation: {
+				'accordion-down': 'accordion-down 0.2s ease-out',
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'float': 'float 6s ease-in-out infinite',
+				'firefly-pulse': 'firefly-pulse 2s ease-in-out infinite alternate',
+				'page-enter': 'page-enter 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+				'shimmer': 'shimmer 2s ease-in-out infinite',
+				'drift': 'drift 20s ease-in-out infinite',
+			},
 			keyframes: {
 				'accordion-down': {
 					from: {
@@ -84,11 +117,24 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0px)' },
+					'50%': { transform: 'translateY(-8px)' }
+				},
+				'firefly-pulse': {
+					'0%': { opacity: '0.7', transform: 'scale(1)' },
+					'100%': { opacity: '1', transform: 'scale(1.1)' }
+				},
+				'shimmer': {
+					'0%': { backgroundPosition: '-200% 0' },
+					'100%': { backgroundPosition: '200% 0' }
+				},
+				'drift': {
+					'0%, 100%': { transform: 'translateX(0) translateY(0)' },
+					'33%': { transform: 'translateX(30px) translateY(-20px)' },
+					'66%': { transform: 'translateX(-20px) translateY(10px)' }
 				}
-			},
-			animation: {
-				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
 			}
 		}
 	},
