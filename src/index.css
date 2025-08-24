@@ -126,6 +126,55 @@
     box-shadow: var(--glow-soft), var(--glow-golden);
   }
   
+  /* Volume Slider Styling */
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+  }
+  
+  input[type="range"]::-webkit-slider-track {
+    background: hsl(var(--forest-medium) / 0.3);
+    height: 4px;
+    border-radius: 2px;
+  }
+  
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: hsl(var(--golden-warm));
+    border: 2px solid hsl(var(--golden-glow));
+    box-shadow: 0 2px 8px hsl(var(--golden-warm) / 0.3);
+    transition: all 0.2s ease;
+  }
+  
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 12px hsl(var(--golden-warm) / 0.5);
+  }
+  
+  input[type="range"]::-moz-range-track {
+    background: hsl(var(--forest-medium) / 0.3);
+    height: 4px;
+    border-radius: 2px;
+    border: none;
+  }
+  
+  input[type="range"]::-moz-range-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: hsl(var(--golden-warm));
+    border: 2px solid hsl(var(--golden-glow));
+    box-shadow: 0 2px 8px hsl(var(--golden-warm) / 0.3);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
   /* Floating Animation */
   .float-gentle {
     animation: float 6s ease-in-out infinite;

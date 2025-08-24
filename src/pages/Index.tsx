@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import NatureScene from '@/components/NatureScene';
+import PeacefulBackground from '@/components/NatureScene';
 import DiaryCalendar from '@/components/DiaryCalendar';
 import DiaryPage from '@/components/DiaryPage';
+import AmbientAudio from '@/components/AmbientAudio';
 import { useDiaryStorage } from '@/hooks/useDiaryStorage';
 import { cn } from '@/lib/utils';
 
@@ -66,7 +67,8 @@ export default function Index() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <NatureScene />
+        <PeacefulBackground />
+        <AmbientAudio />
         <div className="glass-panel rounded-2xl p-8 float-gentle">
           <div className="text-golden-soft text-lg">
             Loading your peaceful sanctuary...
@@ -78,8 +80,11 @@ export default function Index() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* 3D Nature Background */}
-      <NatureScene />
+      {/* Peaceful Background */}
+      <PeacefulBackground />
+      
+      {/* Ambient Audio Controls */}
+      <AmbientAudio />
       
       {/* Overlay for better text readability */}
       <div className="fixed inset-0 bg-gradient-to-b from-transparent via-transparent to-background/10 pointer-events-none" />
