@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const NATURE_SOUND_URL = '/sounds/nature.mp3'; // Put your nature sound file in public/sounds/
-const PIANO_SOUND_URL = '/sounds/piano.mp3';   // Put your piano file in public/sounds/
+const NATURE_SOUND_URL = '/sounds/nature.mp3';
+const PIANO_SOUND_URL = '/sounds/piano.mp3';
+
+const YOUTUBE_EMBED_URL = 'https://www.youtube.com/embed/FMrtSHAAPhM?si=8M0nfqPPy1J5SRIP';
 
 export default function AmbientAudio() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -13,41 +15,44 @@ export default function AmbientAudio() {
   const pianoAudioRef = useRef<HTMLAudioElement | null>(null);
 
   // Start both audio tracks and loop them
-  const startAmbientSounds = () => {
-    if (!natureAudioRef.current) {
-      natureAudioRef.current = new Audio(NATURE_SOUND_URL);
-      natureAudioRef.current.loop = true;
-      natureAudioRef.current.volume = volume * 0.7;
+  const startAmbientSounds = async () => {
+    try {
+      if (!natureAudioRef.current) {
+        natureAudioRef.current = new Audio(NATURE_SOUND_URL);
+        natureAudioRef.current.loop = true;
+        natureAudioRef.current.volume = volume * 0.7;
+      }
+      if (!pianoAudioRef.current) {
+        pianoAudioRef.current = new Audio(PIANO_SOUND_URL);
+        pianoAudioRef.current.loop = true;
+        pianoAudioRef.current.volume = volume * 0.5;
+      }
+      await natureAudioRef.current.play();
+      await pianoAudioRef.current.play();
+      setIsPlaying(true);
+    } catch (err) {
+      console.error('Could not play ambient sounds:', err);
+      alert('Local audio autoplay blocked. Use the YouTube player below!');
+      setIsPlaying(true); // Still show as playing, just YouTube instead
     }
-    if (!pianoAudioRef.current) {
-      pianoAudioRef.current = new Audio(PIANO_SOUND_URL);
-      pianoAudioRef.current.loop = true;
-      pianoAudioRef.current.volume = volume * 0.5;
-    }
-    natureAudioRef.current.play();
-    pianoAudioRef.current.play();
   };
 
-  // Stop both audio tracks
   const stopAmbientSounds = () => {
     natureAudioRef.current?.pause();
-    natureAudioRef.current!.currentTime = 0;
+    if (natureAudioRef.current) natureAudioRef.current.currentTime = 0;
     pianoAudioRef.current?.pause();
-    pianoAudioRef.current!.currentTime = 0;
+    if (pianoAudioRef.current) pianoAudioRef.current.currentTime = 0;
+    setIsPlaying(false);
   };
 
-  // Toggle play/pause
   const togglePlay = () => {
     if (isPlaying) {
       stopAmbientSounds();
-      setIsPlaying(false);
     } else {
       startAmbientSounds();
-      setIsPlaying(true);
     }
   };
 
-  // Change volume for both tracks
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(e.target.value);
     setVolume(newVolume);
@@ -55,24 +60,11 @@ export default function AmbientAudio() {
     if (pianoAudioRef.current) pianoAudioRef.current.volume = newVolume * 0.5;
   };
 
-  // Auto-start ambient sounds after a brief delay (better UX)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!isPlaying) {
-        togglePlay();
-      }
-    }, 2000);
-
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line
-  }, []);
-
   // Cleanup on unmount
   useEffect(() => {
     return () => {
       stopAmbientSounds();
     };
-    // eslint-disable-next-line
   }, []);
 
   return (
@@ -112,6 +104,26 @@ export default function AmbientAudio() {
       <div className="text-xs text-forest-mist mt-2 text-center">
         {isPlaying ? 'Nature and piano ambiance playing' : 'Ambient sounds paused'}
       </div>
+      <div className="text-xs text-red-500 mt-2 text-center">
+        { !isPlaying && 'If local sounds do not play, check your browser and file locations. Or use the YouTube player below.' }
+      </div>
+
+      {/* YouTube fallback */}
+      {isPlaying && (
+        <div className="mt-4 flex flex-col items-center">
+          <iframe
+            width="260"
+            height="150"
+            src={YOUTUBE_EMBED_URL + '&autoplay=1'}
+            title="Nature & Piano YouTube Ambience"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            style={{ borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}
+          />
+          <div className="text-xs text-forest-mist mt-2">Enjoy the YouTube ambiance!</div>
+        </div>
+      )}
     </div>
   );
 }
